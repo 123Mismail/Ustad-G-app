@@ -11,10 +11,14 @@
             "id": "19f52d0c2c5f0bc1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Pending_Approval/APPROVE_POST_LINKEDIN_20260325_20260325160613.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "APPROVE_POST_LINKEDIN_20260325_20260325160613"
             }
           }
         ]
@@ -179,15 +183,17 @@
       "bases:Create new base": false
     }
   },
-  "active": "bd02ae7dae10ef28",
+  "active": "19f52d0c2c5f0bc1",
   "lastOpenFiles": [
+    "Approved/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
+    "Plans/TASK_LINKEDIN_POST_20260325_openclaw.md",
+    "Pending_Approval/APPROVE_POST_LINKEDIN_20260325_20260325160613.md",
     "In_Progress/cloud/TASK_LINKEDIN_POST_20260325_openclaw.md",
     "Needs_Action/TASK_LINKEDIN_POST_20260325_openclaw.md",
     "Done/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
     "Plans/WHATSAPP_OWNER_20260325202219.md",
     "Approved/WHATSAPP_OWNER_20260325202219.md",
     "Plans/SOCIAL_LINKEDIN_20260325204730.md",
-    "Approved/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
     "In_Progress/cloud/SOCIAL_LINKEDIN_20260325204730.md",
     "Needs_Action/SOCIAL_LINKEDIN_20260325204730.md",
     "Plans/WHATSAPP_OWNER_20260325201944.md",
@@ -208,8 +214,6 @@
     "Plans/EMAIL_19d1decb7ba2ea27_20260324133223.md",
     "In_Progress/cloud/WHATSAPP_OWNER_20260325201313.md",
     "Needs_Action/WHATSAPP_OWNER_20260325201313.md",
-    "Done/APPROVE_POST_PROD_RETRY.md",
-    "Approved/APPROVE_POST_PROD_TEST.md",
     "WhatsApp_Outbox/SEND_20260325200419186350.json",
     "WhatsApp_Outbox/SEND_20260325195046503750.json",
     "WhatsApp_Outbox",
