@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Plans/WHATSAPP_OWNER_20260325201944.md",
+                "file": "Needs_Action/EMAIL_19d2093048709244_20260325213715.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "WHATSAPP_OWNER_20260325201944"
+              "title": "EMAIL_19d2093048709244_20260325213715"
             }
           }
         ]
@@ -183,8 +183,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "19f52d0c2c5f0bc1",
+  "active": "bd02ae7dae10ef28",
   "lastOpenFiles": [
+    "In_Progress/cloud/EMAIL_19d06d5797ae2cb8_20260325213733.md",
+    "Needs_Action/EMAIL_19d0b873c2004ad7_20260325213730.md",
+    "In_Progress/cloud/EMAIL_19d067bcd01a01b6_20260325213733.md",
+    "Plans/WHATSAPP_OWNER_20260325201944.md",
+    "In_Progress/cloud/EMAIL_19d04b72dc6f5f31_20260325213733.md",
+    "Plans/EMAIL_19d02f93c33c2ed1_20260325213734.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d02f93_20260325164146.md",
+    "In_Progress/cloud/EMAIL_19d02f93c33c2ed1_20260325213734.md",
     "Plans/EMAIL_19d02a7c29f35953_20260325213734.md",
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d02a7c_20260325164126.md",
     "In_Progress/cloud/EMAIL_19d02a7c29f35953_20260325213734.md",
@@ -203,14 +211,6 @@
     "Pending_Approval/APPROVE_REPLY_EMAIL_19cffd57_20260325163948.md",
     "In_Progress/cloud/EMAIL_19cffd5700e1260b_20260325213736.md",
     "Plans/EMAIL_19d25a82aba8dae9_20260325213707.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d25a82_20260325163858.md",
-    "In_Progress/cloud/EMAIL_19d25a82aba8dae9_20260325213707.md",
-    "Plans/EMAIL_19d25a6830219234_20260325213707.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d25a68_20260325163837.md",
-    "In_Progress/cloud/EMAIL_19d25a6830219234_20260325213707.md",
-    "Plans/EMAIL_19d25874b45a1705_20260325213708.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d25874_20260325163816.md",
-    "In_Progress/cloud/EMAIL_19d25874b45a1705_20260325213708.md",
     "WhatsApp_Outbox/SEND_20260325202240318049.json",
     "WhatsApp_Outbox/SEND_20260325202030018345.json",
     "WhatsApp_Outbox/SEND_20260325201409676173.json",
