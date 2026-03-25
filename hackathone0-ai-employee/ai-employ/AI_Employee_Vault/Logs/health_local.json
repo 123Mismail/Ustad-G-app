@@ -1,0 +1,11 @@
+{
+  "agent": "local",
+  "timestamp": "2026-03-25T15:51:12.639293+00:00",
+  "pid": 7080,
+  "status": "degraded",
+  "last_task": "WHATSAPP_OWNER_20260325202219.md",
+  "queue_depth": 0,
+  "last_sync_push": "",
+  "last_sync_pull": "",
+  "vault_path": "AI_Employee_Vault"
+}
