@@ -11,14 +11,10 @@
             "id": "19f52d0c2c5f0bc1",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Approved/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "APPROVE_POST_LINKEDIN_20260325_20260325154751"
+              "title": "New tab"
             }
           }
         ]
@@ -185,6 +181,7 @@
   },
   "active": "bd02ae7dae10ef28",
   "lastOpenFiles": [
+    "Done/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
     "Plans/WHATSAPP_OWNER_20260325202219.md",
     "Approved/WHATSAPP_OWNER_20260325202219.md",
     "Plans/SOCIAL_LINKEDIN_20260325204730.md",
@@ -213,7 +210,6 @@
     "Approved/APPROVE_POST_PROD_TEST.md",
     "Pending_Approval/APPROVE_REPLY_WHATSAPP_20260325145252.md",
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d2404cbd4e5c7d_20260325130615.md",
-    "Pending_Approval/APPROVE_REPLY_WHATSAPP_20260325150053.md",
     "WhatsApp_Outbox/SEND_20260325200419186350.json",
     "WhatsApp_Outbox/SEND_20260325195046503750.json",
     "WhatsApp_Outbox",
