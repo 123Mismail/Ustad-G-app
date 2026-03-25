@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "637d830809acd239",
+    "type": "split",
+    "children": [
+      {
+        "id": "8f346b58fc5e37ef",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "19f52d0c2c5f0bc1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Approved/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "APPROVE_POST_LINKEDIN_20260325_20260325154751"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c2521e2a604c7764",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb01143b337f05d8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bd02ae7dae10ef28",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "0d293de26efbf2f9",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "6d469e5ddbd12857",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "dbb3053823bd3fa1",
+    "type": "split",
+    "children": [
+      {
+        "id": "0725ff63c2a13317",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "38fdd34c17f759f9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Done/FILE_test_task_003.txt_20260316163234.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for FILE_test_task_003.txt_20260316163234"
+            }
+          },
+          {
+            "id": "e848e4dd366a60df",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Done/FILE_test_task_003.txt_20260316163234.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from FILE_test_task_003.txt_20260316163234"
+            }
+          },
+          {
+            "id": "ba1a375ed9d428b1",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "cb67a2b0344f0999",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "9859f5cd05a48307",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Done/FILE_test_task_003.txt_20260316163234.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of FILE_test_task_003.txt_20260316163234"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "bd02ae7dae10ef28",
+  "lastOpenFiles": [
+    "Approved/WHATSAPP_OWNER_20260325202219.md",
+    "Plans/SOCIAL_LINKEDIN_20260325204730.md",
+    "Approved/APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
+    "In_Progress/cloud/SOCIAL_LINKEDIN_20260325204730.md",
+    "Needs_Action/SOCIAL_LINKEDIN_20260325204730.md",
+    "Plans/WHATSAPP_OWNER_20260325201944.md",
+    "Approved/APPROVE_REPLY_WHATSAPP_2026-03-25_20-20.md",
+    "Done/APPROVE_REPLY_WHATSAPP_2026-03-25_20-22.md",
+    "WhatsApp_Outbox/SEND_20260325202240318049.json",
+    "Approved/APPROVE_REPLY_WHATSAPP_2026-03-25_20-22.md",
+    "In_Progress/cloud/WHATSAPP_OWNER_20260325202219.md",
+    "Needs_Action/WHATSAPP_OWNER_20260325202219.md",
+    "Done/APPROVE_REPLY_WHATSAPP_2026-03-25_20-20.md",
+    "WhatsApp_Outbox/SEND_20260325202030018345.json",
+    "Plans/WHATSAPP_OWNER_20260325201313.md",
+    "In_Progress/cloud/WHATSAPP_OWNER_20260325201944.md",
+    "Needs_Action/WHATSAPP_OWNER_20260325201944.md",
+    "Approved/APPROVE_REPLY_WHATSAPP_2026-03-25_20-13.md",
+    "Done/APPROVE_REPLY_WHATSAPP_2026-03-25_20-13.md",
+    "WhatsApp_Outbox/SEND_20260325201409676173.json",
+    "Plans/EMAIL_19d1decb7ba2ea27_20260324133223.md",
+    "In_Progress/cloud/WHATSAPP_OWNER_20260325201313.md",
+    "Needs_Action/WHATSAPP_OWNER_20260325201313.md",
+    "Done/APPROVE_POST_PROD_RETRY.md",
+    "Approved/APPROVE_POST_PROD_TEST.md",
+    "Pending_Approval/APPROVE_REPLY_WHATSAPP_20260325145252.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d2404cbd4e5c7d_20260325130615.md",
+    "Pending_Approval/APPROVE_REPLY_WHATSAPP_20260325150053.md",
+    "Approved/APPROVE_REPLY_WHATSAPP_20260325150255.md",
+    "WhatsApp_Outbox/SEND_20260325200419186350.json",
+    "WhatsApp_Outbox/SEND_20260325195046503750.json",
+    "WhatsApp_Outbox",
+    "Logs/health_cloud.json",
+    "Logs/health_local.json",
+    "In_Progress/local",
+    "In_Progress/cloud"
+  ]
+}
