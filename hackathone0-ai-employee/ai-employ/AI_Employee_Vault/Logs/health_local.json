@@ -1,9 +1,9 @@
 {
   "agent": "local",
-  "timestamp": "2026-03-25T15:52:44.859818+00:00",
-  "pid": 12112,
-  "status": "degraded",
-  "last_task": "APPROVE_POST_LINKEDIN_20260325_20260325154751.md",
+  "timestamp": "2026-03-25T15:53:11.803710+00:00",
+  "pid": 18276,
+  "status": "running",
+  "last_task": "",
   "queue_depth": 0,
   "last_sync_push": "",
   "last_sync_pull": "",
