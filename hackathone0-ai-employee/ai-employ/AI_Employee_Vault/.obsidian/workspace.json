@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Plans/EMAIL_19d293509bb2948b_20260326131636.md",
+                "file": "Done/ODOO_TEST_INVOICE_001.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "EMAIL_19d293509bb2948b_20260326131636"
+              "title": "ODOO_TEST_INVOICE_001"
             }
           }
         ]
@@ -183,8 +183,15 @@
       "bases:Create new base": false
     }
   },
-  "active": "bd02ae7dae10ef28",
+  "active": "19f52d0c2c5f0bc1",
   "lastOpenFiles": [
+    "Done/ODOO_INVOICE_ACME_20260326.md",
+    "Done/APPROVE_COMMENT_LINKEDIN_ivity_7309876543210987654_20260326122027.md",
+    "Plans/EMAIL_19d293509bb2948b_20260326131636.md",
+    "Done/APPROVE_POST_INVOICE_SVC-2026-ACME-001_20260326104716.md",
+    "Approved/APPROVE_POST_INVOICE_SVC-2026-ACME-001_20260326104716.md",
+    "Plans/ODOO_INVOICE_ACME_20260326.md",
+    "Pending_Approval/APPROVE_POST_INVOICE_SVC-2026-ACME-001_20260326104716.md",
     "In_Progress/cloud/ODOO_INVOICE_ACME_20260326.md",
     "Needs_Action/ODOO_INVOICE_ACME_20260326.md",
     "Done/APPROVE_POST_INVOICE_TEST-INV-001_20260326103440.md",
@@ -204,13 +211,6 @@
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d293b99f7f1337_20260326132236.md",
     "Plans/EMAIL_19d2943b6d402c13_20260326133238.md",
     "Needs_Action/EMAIL_19d2943b6d402c13_20260326133238.md",
-    "Plans/EMAIL_19d293b99f7f1337_20260326132236.md",
-    "Needs_Action/EMAIL_19d293b99f7f1337_20260326132236.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d29337ed6b115d_20260326131637.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d293509bb2948b_20260326131636.md",
-    "Plans/EMAIL_19d29337ed6b115d_20260326131637.md",
-    "Plans/EMAIL_19d293509bb2948b_20260326131636.md",
-    "Needs_Action/EMAIL_19d29337ed6b115d_20260326131637.md",
     "Logs/rate_limit_state.json",
     "Logs/2026-03-26.json",
     "Pending_Approval/APPROVE_COMMENT_LINKEDIN_ivity",
