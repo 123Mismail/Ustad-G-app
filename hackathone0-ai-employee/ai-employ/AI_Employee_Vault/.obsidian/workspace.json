@@ -11,10 +11,14 @@
             "id": "19f52d0c2c5f0bc1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Plans/EMAIL_19d293509bb2948b_20260326131636.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "EMAIL_19d293509bb2948b_20260326131636"
             }
           }
         ]
@@ -179,11 +183,14 @@
       "bases:Create new base": false
     }
   },
-  "active": "bd02ae7dae10ef28",
+  "active": "19f52d0c2c5f0bc1",
   "lastOpenFiles": [
+    "Plans/WHATSAPP_OWNER_20260326122515.md",
+    "Plans/EMAIL_19d00a3231e79d97_20260325213735.md",
+    "Plans/EMAIL_19cffd5700e1260b_20260325213736.md",
+    "Approved/APPROVE_REPLY_EMAIL_19d2943b6d402c13_20260326133238.md",
     "Done/APPROVE_REPLY_EMAIL_19d2943b6d402c13_20260326133238.md",
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d293b99f7f1337_20260326132236.md",
-    "Approved/APPROVE_REPLY_EMAIL_19d2943b6d402c13_20260326133238.md",
     "Plans/EMAIL_19d2943b6d402c13_20260326133238.md",
     "Needs_Action/EMAIL_19d2943b6d402c13_20260326133238.md",
     "Plans/EMAIL_19d293b99f7f1337_20260326132236.md",
@@ -204,9 +211,6 @@
     "Done/PLAN_LINKEDIN_CONNECT_haseeb-shah1_20260326130237.md",
     "Plans/PLAN_LINKEDIN_CONNECT_muhammad-ali-waheed_20260326130237.md",
     "Plans/LINKEDIN_CONNECT_muhammad-ali-waheed_20260326130237.md",
-    "Plans/PLAN_LINKEDIN_CONNECT_haseeb-shah1_20260326130237.md",
-    "Plans/LINKEDIN_CONNECT_haseeb-shah1_20260326130237.md",
-    "Plans/PLAN_LINKEDIN_CONNECT_humam-ullah_20260326130237.md",
     "Logs/rate_limit_state.json",
     "Logs/2026-03-26.json",
     "Pending_Approval/APPROVE_COMMENT_LINKEDIN_ivity",
