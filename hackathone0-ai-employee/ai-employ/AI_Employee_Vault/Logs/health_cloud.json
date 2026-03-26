@@ -1,10 +1,10 @@
 {
   "agent": "cloud",
-  "timestamp": "2026-03-26T10:43:06.910559+00:00",
+  "timestamp": "2026-03-26T10:43:32.552254+00:00",
   "pid": 5452,
-  "status": "running",
-  "last_task": "",
-  "queue_depth": 1,
+  "status": "degraded",
+  "last_task": "ODOO_INVOICE_ACME_20260326.md",
+  "queue_depth": 0,
   "last_sync_push": "",
   "last_sync_pull": "",
   "vault_path": "AI_Employee_Vault"
