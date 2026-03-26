@@ -7,8 +7,8 @@ odoo_invoice_id: 25
 odoo_partner_id: 1
 odoo_partner_name: Administrator
 odoo_ref: TEST-INV-001
-odoo_status: draft
-status: pending_approval
+odoo_status: posted
+status: done
 type: odoo_invoice
 ---
 
