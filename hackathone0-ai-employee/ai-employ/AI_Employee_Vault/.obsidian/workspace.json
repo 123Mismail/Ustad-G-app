@@ -11,14 +11,10 @@
             "id": "19f52d0c2c5f0bc1",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Pending_Approval/APPROVE_REPLY_EMAIL_19d293b99f7f1337_20260326132236.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "APPROVE_REPLY_EMAIL_19d293b99f7f1337_20260326132236"
+              "title": "New tab"
             }
           }
         ]
@@ -183,7 +179,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "19f52d0c2c5f0bc1",
+  "active": "bd02ae7dae10ef28",
   "lastOpenFiles": [
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d293b99f7f1337_20260326132236.md",
     "Plans/EMAIL_19d293b99f7f1337_20260326132236.md",
