@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Approved/APPROVE_COMMENT_LINKEDIN_ivity_7309876543210987654_20260326122027.md",
+                "file": "Pending_Approval/APPROVE_REPLY_EMAIL_19d26292_20260326072323.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "APPROVE_COMMENT_LINKEDIN_ivity_7309876543210987654_20260326122027"
+              "title": "APPROVE_REPLY_EMAIL_19d26292_20260326072323"
             }
           }
         ]
@@ -183,8 +183,22 @@
       "bases:Create new base": false
     }
   },
-  "active": "bd02ae7dae10ef28",
+  "active": "19f52d0c2c5f0bc1",
   "lastOpenFiles": [
+    "Done/FILE_modular_test.txt_20260326124456.md",
+    "Done/PLAN_FILE_modular_test.txt_20260326124456.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d2741c_20260326072432.md",
+    "Done/FILE_last testing done.md_20260326124455.md",
+    "Done/PLAN_FILE_last testing done.md_20260326124455.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d267ea_20260326072410.md",
+    "Done/FILE_fully autonomus.md_20260326124454.md",
+    "Done/PLAN_FILE_fully autonomus.md_20260326124454.md",
+    "Done/FILE_autonomous_test.txt_20260326124453.md",
+    "Done/PLAN_FILE_autonomous_test.txt_20260326124453.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d28f7c_20260326072514.md",
+    "Done/FILE_.gitkeep_20260326124452.md",
+    "Done/PLAN_FILE_.gitkeep_20260326124452.md",
+    "Pending_Approval/APPROVE_REPLY_EMAIL_19d28ddb_20260326072453.md",
     "Needs_Action/EMAIL_19d26292a0051ad0_20260326122306.md",
     "Needs_Action/EMAIL_19d26316d9e8087f_20260326122306.md",
     "Needs_Action/EMAIL_19d267ea241712ac_20260326122306.md",
@@ -200,20 +214,6 @@
     "Pending_Approval/APPROVE_COMMENT_LINKEDIN_ivity",
     "Done/EMAIL_19d25e15ada48ea8_20260325214538.md",
     "Done/APPROVE_REPLY_EMAIL_19d25e15_20260325164544.md",
-    "In_Progress/local/APPROVE_REPLY_EMAIL_19d25e15_20260325164544.md",
-    "Plans/EMAIL_19d25e15ada48ea8_20260325214538.md",
-    "Approved/APPROVE_REPLY_EMAIL_19d25e15_20260325164544.md",
-    "In_Progress/cloud/EMAIL_19d25e15ada48ea8_20260325214538.md",
-    "Needs_Action/EMAIL_19d25e15ada48ea8_20260325214538.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19cffd57_20260325163948.md",
-    "Needs_Action/EMAIL_19d2093048709244_20260325213715.md",
-    "Needs_Action/EMAIL_19d0b873c2004ad7_20260325213730.md",
-    "Needs_Action/EMAIL_19d0c28d23f8a6de_20260325213730.md",
-    "Plans/EMAIL_19d06d5797ae2cb8_20260325213733.md",
-    "Pending_Approval/APPROVE_REPLY_EMAIL_19d06d57_20260325164224.md",
-    "In_Progress/cloud/EMAIL_19d06d5797ae2cb8_20260325213733.md",
-    "In_Progress/cloud/EMAIL_19d067bcd01a01b6_20260325213733.md",
-    "In_Progress/cloud/EMAIL_19d04b72dc6f5f31_20260325213733.md",
     "WhatsApp_Outbox/SEND_20260325202240318049.json",
     "WhatsApp_Outbox/SEND_20260325202030018345.json",
     "WhatsApp_Outbox/SEND_20260325201409676173.json",
