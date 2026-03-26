@@ -2,5 +2,5 @@
 
 ## Steps
 - [x] T001 Analyze file content.
-- [ ] T002 Execute action.
+- [x] T002 Execute action.
 - [ ] T003 Log completion.
