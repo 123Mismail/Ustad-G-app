@@ -185,6 +185,9 @@
   },
   "active": "bd02ae7dae10ef28",
   "lastOpenFiles": [
+    "In_Progress/cloud/WHATSAPP_OWNER_20260327074326.md",
+    "Done/APPROVE_REPLY_WHATSAPP_2026-03-27_07-43.md",
+    "WhatsApp_Outbox/SEND_20260327074347123689.json",
     "Needs_Action/WHATSAPP_OWNER_20260327074326.md",
     "Plans/WHATSAPP_OWNER_20260327074226.md",
     "Approved/APPROVE_REPLY_WHATSAPP_2026-03-27_07-43.md",
@@ -209,8 +212,6 @@
     "Done/FILE_.gitkeep_20260327073941.md",
     "Done/PLAN_FILE_.gitkeep_20260327073941.md",
     "Done/EMAIL_19d2d1c972494666_20260327073952.md",
-    "Done/APPROVE_REPLY_EMAIL_19d2d1c972494666_20260327073952.md",
-    "Approved/APPROVE_REPLY_EMAIL_19d2d1c972494666_20260327073952.md",
     "Logs/2026-03-27.json",
     "Logs/rate_limit_state.json",
     "Logs/2026-03-26.json",
@@ -219,7 +220,6 @@
     "WhatsApp_Outbox/SEND_20260325202030018345.json",
     "WhatsApp_Outbox/SEND_20260325201409676173.json",
     "WhatsApp_Outbox/SEND_20260325200419186350.json",
-    "WhatsApp_Outbox/SEND_20260325195046503750.json",
-    "WhatsApp_Outbox"
+    "WhatsApp_Outbox/SEND_20260325195046503750.json"
   ]
 }
