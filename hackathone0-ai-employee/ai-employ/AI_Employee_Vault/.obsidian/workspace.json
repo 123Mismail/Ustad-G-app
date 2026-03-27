@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Done/ODOO_TEST_INVOICE_001.md",
+                "file": "Pending_Approval/APPROVE_REPLY_WHATSAPP_2026-03-27_07-43.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ODOO_TEST_INVOICE_001"
+              "title": "APPROVE_REPLY_WHATSAPP_2026-03-27_07-43"
             }
           }
         ]
@@ -183,10 +183,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "bd02ae7dae10ef28",
+  "active": "19f52d0c2c5f0bc1",
   "lastOpenFiles": [
-    "Plans/EMAIL_19d2d2a1fe21f0bd_20260327074453.md",
     "Pending_Approval/APPROVE_REPLY_EMAIL_19d2d2a1_20260327024513.md",
+    "Done/ODOO_TEST_INVOICE_001.md",
+    "Plans/EMAIL_19d2d2a1fe21f0bd_20260327074453.md",
     "In_Progress/cloud/EMAIL_19d2d2a1fe21f0bd_20260327074453.md",
     "Needs_Action/EMAIL_19d2d2a1fe21f0bd_20260327074453.md",
     "Plans/WHATSAPP_OWNER_20260327074326.md",
@@ -211,7 +212,6 @@
     "Done/PLAN_FILE_modular_test.txt_20260327073945.md",
     "Done/FILE_last testing done.md_20260327073944.md",
     "Done/PLAN_FILE_last testing done.md_20260327073944.md",
-    "Done/FILE_fully autonomus.md_20260327073943.md",
     "Logs/2026-03-27.json",
     "Logs/rate_limit_state.json",
     "Logs/2026-03-26.json",
