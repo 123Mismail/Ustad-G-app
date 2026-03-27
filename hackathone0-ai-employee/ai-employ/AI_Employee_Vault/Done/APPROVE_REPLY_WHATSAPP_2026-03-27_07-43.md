@@ -1,13 +1,13 @@
 ---
-approved_at: ''
-approved_by: ''
+approved_at: '2026-03-27T02:43:47.127947+00:00'
+approved_by: human
 claimed_by: cloud
 created_at: 2026-03-27 07:43
 expires: 2026-03-28 07:43
 message_body: Hi Mine! I'm doing well, thanks for asking. I'd be happy to help with
   the agentic FYE service. What do you need assistance with?
 recipient: Mine(You)
-status: pending_approval
+status: approved
 type: whatsapp_reply
 ---
 
