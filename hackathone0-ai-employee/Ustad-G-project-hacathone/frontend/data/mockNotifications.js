@@ -1,0 +1,42 @@
+export const MOCK_NOTIFICATIONS = [
+  {
+    id: '1',
+    titleKey: 'notif_booking_title',
+    bodyKey: 'notif_booking_body',
+    type: 'success',
+    time: '5m ago',
+    isRead: false,
+  },
+  {
+    id: '2',
+    titleKey: 'notif_agent_title',
+    bodyKey: 'notif_agent_body',
+    type: 'info',
+    time: '1h ago',
+    isRead: false,
+  },
+  {
+    id: '3',
+    titleKey: 'notif_reminder_title',
+    bodyKey: 'notif_reminder_body',
+    type: 'warning',
+    time: '3h ago',
+    isRead: true,
+  },
+  {
+    id: '4',
+    titleKey: 'notif_welcome_title',
+    bodyKey: 'notif_welcome_body',
+    type: 'info',
+    timeKey: 'yesterday',
+    isRead: true,
+  },
+  {
+    id: '5',
+    titleKey: 'notif_welcome_title',
+    bodyKey: 'notif_welcome_body',
+    type: 'info',
+    timeKey: 'yesterday',
+    isRead: true,
+  },
+];
