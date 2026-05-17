@@ -1,0 +1,33 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments
+.env
+.env.example
+
+# Secrets (DO NOT INCLUDE IN IMAGE!)
+service_account.json
+*.json
+
+# Source Control & Plans
+.git/
+.agents/
+plans/
+deployments/
+scratch/
+
+# Tests
+test_*.py
+
+# Documentation & Scripts
+*.md
+*.ps1
+
+# FastAPI backend stuff that the MCP server doesn't need
+app/main.py
+app/routers/
+app/agents/
