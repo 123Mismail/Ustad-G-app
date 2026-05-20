@@ -56,8 +56,12 @@ class ProviderResult(BaseModel):
 
 class TraceStep(BaseModel):
     """A single agent thought — streamed to the frontend for visual impact."""
-    agent_name: str
-    summary: str = Field(..., description="Short human-readable thought")
+    name: str = Field(..., description="Name of the agent (e.g., TriageAgent)")
+    status: str = Field(default="done")
+    timestamp: str = Field(...)
+    input: str = Field(default="")
+    thinking: str = Field(default="")
+    output: str = Field(default="")
 
 
 class ChatResponse(BaseModel):

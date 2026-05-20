@@ -19,8 +19,7 @@ class SheetsBookingInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
     confirmation_id: str = Field(...,
-        description="Unique booking ID in format UGK-YYYY-XXXX",
-        examples=["UGK-2026-4821"])
+        description="Unique booking ID in format UGK-YYYY-XXXX")
     user_name: str = Field(..., min_length=1, max_length=100)
     service: str = Field(..., min_length=2, max_length=100,
         description="Service type (e.g., 'Plumber', 'Electrician')")

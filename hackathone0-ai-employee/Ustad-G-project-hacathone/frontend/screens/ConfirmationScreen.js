@@ -1,32 +1,113 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Colors } from '../theme/colors';
 import { Typography, BorderRadius, getStyle } from '../theme/typography';
 import { t } from '../utils/i18n';
-import { useLanguage } from '../App';
+import { useLanguage } from '../context/LanguageContext';
+import { useGlobalNotification } from '../context/NotificationContext';
+import { createBooking } from '../services/bookings.service';
+import { useAuth } from '../context/AuthContext';
+import { triggerLocalNotification, scheduleLocalReminder } from '../utils/notifications';
 
 export default function ConfirmationScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
   const { language } = useLanguage();
+  const { showNotificationAlert, scheduleForegroundAlert } = useGlobalNotification();
+  const { user } = useAuth();
+  
+  const [loading, setLoading] = useState(true);
+  const [bookingResult, setBookingResult] = useState(null);
 
-  // Mock booking data
-  const booking = {
-    id: 'UGK-2026-1234',
-    providerName: 'Ali Electrician',
-    serviceType: 'Wiring & Repair',
-    dateTime: 'Today, 2:00 PM',
-    location: 'Clifton, Karachi'
-  };
+  const { provider, service, scheduledAt } = route.params || {};
+
+  useEffect(() => {
+    async function submitBooking() {
+      if (!provider) {
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const result = await createBooking({
+          provider_id: provider.id,
+          session_id: null,
+          service: service || provider.serviceKey || 'General',
+          scheduled_at: scheduledAt || new Date().toISOString()
+        });
+        setBookingResult(result);
+
+        // ── Real-Time Local Notification & Confetti Interceptor ──
+        try {
+          const providerName = provider?.name || 'Selected Provider';
+          
+          const notifTitle = language === 'ur' ? '✅ بکنگ کنفرم ہو گئی' : '✅ Booking Confirmed!';
+          const notifBody = language === 'ur'
+            ? `بکنگ نمبر ${result.confirmation_id} کامیابی سے ریکارڈ ہو گئی ہے۔`
+            : `Your booking ${result.confirmation_id} has been successfully recorded.`;
+
+          // Trigger direct in-app celebration and sliding banner!
+          showNotificationAlert(notifTitle, notifBody);
+
+          // Trigger native OS push alert in background!
+          await triggerLocalNotification(notifTitle, notifBody);
+
+          // Schedule 1-minute reminder
+          const reminderTitle = language === 'ur' ? '⏰ آپ کے استاد روانہ ہو چکے ہیں!' : '⏰ Your Ustad is departing soon!';
+          const reminderBody = language === 'ur'
+            ? `${providerName} آپ کی طرف آ رہے ہیں۔`
+            : `${providerName} is heading your way.`;
+
+          await scheduleLocalReminder(reminderTitle, reminderBody, result.scheduled_at);
+          scheduleForegroundAlert(reminderTitle, reminderBody, result.scheduled_at);
+        } catch (notifErr) {
+          console.warn('[ConfirmationScreen] Failed to trigger notifications:', notifErr);
+        }
+      } catch (error) {
+        console.error('[ConfirmationScreen] Error creating booking:', error);
+        Alert.alert(
+          'Booking Failed',
+          error.response?.data?.detail || 'Could not complete your booking. Please try again.',
+          [{ text: 'OK', onPress: () => navigation.goBack() }]
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    submitBooking();
+  }, [provider, service, scheduledAt]);
 
   const handleReturnHome = () => {
-    // Reset stack to Dashboard safely
     navigation.reset({
       index: 0,
       routes: [{ name: 'Dashboard' }],
     });
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={Colors.accent} />
+        <Text style={{ marginTop: 16, color: Colors.textMuted }}>Confirming your booking...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!bookingResult) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: Colors.textDark }}>No booking details available.</Text>
+        <TouchableOpacity style={[styles.homeButton, { marginTop: 20, width: '80%' }]} onPress={handleReturnHome}>
+          <Text style={styles.homeButtonText}>Return Home</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  const displayDateTime = new Date(bookingResult.scheduled_at).toLocaleString();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -42,15 +123,15 @@ export default function ConfirmationScreen() {
         {/* Booking ID Card */}
         <View style={styles.idCard}>
           <Text style={[styles.idLabel, getStyle('caption', language)]}>{t('booking_id', language)}</Text>
-          <Text style={[styles.idValue, getStyle('header', language)]}>{booking.id}</Text>
+          <Text style={[styles.idValue, getStyle('header', language)]}>{bookingResult.confirmation_id}</Text>
         </View>
 
         {/* Service Summary */}
         <View style={styles.summaryBox}>
-          <SummaryRow icon="user" label={t('provider', language)} value={booking.providerName} language={language} />
-          <SummaryRow icon="tool" label={t('service', language)} value={booking.serviceType} language={language} />
-          <SummaryRow icon="calendar" label={t('date_time', language)} value={booking.dateTime} language={language} />
-          <SummaryRow icon="map-pin" label={t('location', language)} value={booking.location} language={language} />
+          <SummaryRow icon="user" label={t('provider', language)} value={provider?.name || 'Assigned Provider'} language={language} />
+          <SummaryRow icon="tool" label={t('service', language)} value={bookingResult.service} language={language} />
+          <SummaryRow icon="calendar" label={t('date_time', language)} value={displayDateTime} language={language} />
+          <SummaryRow icon="map-pin" label={t('location', language)} value={user?.city || 'Karachi'} language={language} />
         </View>
 
         {/* Return Button */}

@@ -1,0 +1,17 @@
+node_modules
+.expo
+dist
+web-build
+.git
+.gitignore
+.easignore
+.gcloudignore
+Dockerfile
+FRONTEND_DEPLOYMENT_PLAN.md
+notification_analysis.md
+walkthrough.md
+walkthrough-bug-fix.md
+plan.md
+implementation_plan.md
+design.md
+frontend-deploy/

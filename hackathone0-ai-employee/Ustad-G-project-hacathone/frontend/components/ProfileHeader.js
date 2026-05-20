@@ -3,16 +3,21 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProfileHeader() {
+  const { user } = useAuth();
+  
+  const initials = user?.name ? user.name.substring(0, 2).toUpperCase() : 'UG';
+
   return (
     <View style={styles.container}>
       <View style={styles.avatar}>
-        <Text style={styles.initials}>UG</Text>
+        <Text style={styles.initials}>{initials}</Text>
       </View>
       <View style={styles.info}>
-        <Text style={styles.name}>UstadG User</Text>
-        <Text style={styles.phone}>+92 300 1234567</Text>
+        <Text style={styles.name}>{user?.name || 'UstadG User'}</Text>
+        <Text style={styles.phone}>{user?.phone || ''}</Text>
       </View>
       <View style={styles.editButton}>
         <Feather name="edit-2" size={18} color={Colors.textDark} />

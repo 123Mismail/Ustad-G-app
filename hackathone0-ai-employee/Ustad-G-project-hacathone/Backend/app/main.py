@@ -15,8 +15,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import health, chat, book, providers, trace, users
+from app.routers import health, chat, book, providers, trace, users, bookings, admin, auth
 from app.utils.tracing import setup_tracing
+from app.utils.scheduler import scheduler
 
 settings = get_settings()
 
@@ -30,6 +31,9 @@ async def lifespan(app: FastAPI):
     """
     # ── Startup ──────────────────────────────────────────────────
     setup_tracing()
+    
+    scheduler.start()
+    print("[STARTUP] APScheduler started.")
 
     print(f"\n[STARTUP] UstadG Backend v{settings.app_version} starting up...")
     print(f"   Environment : {settings.app_env}")
@@ -65,6 +69,11 @@ async def lifespan(app: FastAPI):
     yield  # ← Application runs here
 
     # ── Shutdown ─────────────────────────────────────────────────
+    from app.agents.orchestrator import close_ustadg_swarm
+    await close_ustadg_swarm()
+    
+    scheduler.shutdown(wait=False)
+    print("[SHUTDOWN] APScheduler stopped.")
     print("\n[SHUTDOWN] UstadG Backend shutting down...")
 
 
@@ -99,9 +108,12 @@ API_PREFIX = "/v1"
 app.include_router(health.router,    prefix=API_PREFIX)
 app.include_router(chat.router,      prefix=API_PREFIX)
 app.include_router(book.router,      prefix=API_PREFIX)
+app.include_router(bookings.router,  prefix=API_PREFIX)
 app.include_router(providers.router, prefix=API_PREFIX)
 app.include_router(trace.router,     prefix=API_PREFIX)
 app.include_router(users.router,     prefix=API_PREFIX)
+app.include_router(admin.router,     prefix=API_PREFIX)
+app.include_router(auth.router,      prefix=API_PREFIX)
 
 
 # ── Root ──────────────────────────────────────────────────────────────────────

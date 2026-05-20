@@ -11,8 +11,9 @@ import { Feather } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { Typography, BorderRadius, getStyle } from '../theme/typography';
 import { t } from '../utils/i18n';
-import { useLanguage } from '../App';
+import { useLanguage } from '../context/LanguageContext';
 import { POPULAR_SERVICES } from '../data/popularServices';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // ─── Greeting helper ────────────────────────────────────────────────────────
 function getGreetingKey() {
@@ -40,8 +41,9 @@ function StatPill({ icon, label, language }) {
 }
 
 // ─── HeroBanner ──────────────────────────────────────────────────────────────
-export default function HeroBanner({ onBellPress }) {
+export default function HeroBanner({ onBellPress, unreadCount = 0 }) {
   const { language } = useLanguage();
+  const insets = useSafeAreaInsets();
 
   const greetingText = `${getGreetingEmoji()}  ${t(getGreetingKey(), language)}`;
   const appName = t('welcome_to', language).replace('%{app}', t('app_name', language));
@@ -51,7 +53,7 @@ export default function HeroBanner({ onBellPress }) {
 
   return (
     // Outer wrapper carries the neon glow shadow (iOS) / elevation (Android)
-    <View style={styles.outerWrapper}>
+    <View style={[styles.outerWrapper, { marginTop: Math.max(insets.top - 10, 0) }]}>
       <LinearGradient
         colors={['#1A1A1A', '#2A2A2A']}
         start={{ x: 0, y: 0 }}
@@ -73,6 +75,11 @@ export default function HeroBanner({ onBellPress }) {
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Feather name="bell" size={20} color={Colors.accent} />
+            {unreadCount > 0 && (
+              <View style={styles.badgeContainer}>
+                <Text style={styles.badgeText}>{unreadCount}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -145,6 +152,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#FFFFFF20',
+    position: 'relative', // Enable absolute positioning for children
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    backgroundColor: '#FF3B30', // Premium Apple Notification Red
+    borderRadius: 9,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 1.5,
+    borderColor: '#1A1A1A', // Seamless contrast border with linear gradient dark bg
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 
   // Divider

@@ -5,7 +5,7 @@ import { Colors } from '../theme/colors';
 import { Typography, getStyle } from '../theme/typography';
 
 import { t } from '../utils/i18n';
-import { useLanguage } from '../App';
+import { useLanguage } from '../context/LanguageContext';
 
 const TYPE_CONFIG = {
   success: { icon: 'check-circle', color: '#4CAF50', bg: 'rgba(76, 175, 80, 0.1)' },
@@ -13,7 +13,7 @@ const TYPE_CONFIG = {
   info: { icon: 'info', color: '#2196F3', bg: 'rgba(33, 150, 243, 0.1)' },
 };
 
-export default function NotificationItem({ notification }) {
+export default function NotificationItem({ notification, onClear }) {
   const { language } = useLanguage();
   const config = TYPE_CONFIG[notification.type] || TYPE_CONFIG.info;
 
@@ -22,21 +22,34 @@ export default function NotificationItem({ notification }) {
     : notification.time;
 
   return (
-    <TouchableOpacity style={[styles.container, !notification.isRead && styles.unread]}>
+    <View style={[styles.container, !notification.isRead && styles.unread]}>
       <View style={[styles.iconBox, { backgroundColor: config.bg }]}>
         <Feather name={config.icon} size={20} color={config.color} />
       </View>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={[styles.title, getStyle('body', language)]}>{t(notification.titleKey, language)}</Text>
+          <Text style={[styles.title, getStyle('body', language)]}>
+            {notification.titleKey ? t(notification.titleKey, language) : notification.title}
+          </Text>
           <Text style={[styles.time, getStyle('caption', language)]}>{displayTime}</Text>
         </View>
-        <Text style={[styles.body, getStyle('caption', language)]} numberOfLines={2}>
-          {t(notification.bodyKey, language)}
+        <Text style={[styles.body, getStyle('caption', language)]} numberOfLines={3}>
+          {notification.bodyKey ? t(notification.bodyKey, language) : notification.body}
         </Text>
       </View>
-      {!notification.isRead && <View style={styles.dot} />}
-    </TouchableOpacity>
+      
+      <View style={styles.rightActions}>
+        {!notification.isRead && <View style={styles.dot} />}
+        <TouchableOpacity 
+          onPress={onClear}
+          style={styles.clearBtn}
+          activeOpacity={0.6}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Feather name="x" size={16} color={Colors.textMuted} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -71,6 +84,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.textDark,
+    flex: 1,
+    marginRight: 8,
   },
   time: {
     color: Colors.textMuted,
@@ -84,5 +99,18 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.accent,
     marginLeft: 8,
+  },
+  rightActions: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginLeft: 8,
+  },
+  clearBtn: {
+    padding: 6,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

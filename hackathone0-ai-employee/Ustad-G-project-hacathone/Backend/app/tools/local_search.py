@@ -1,8 +1,9 @@
 import json
 import math
-import sqlite3
 import requests
 from app.config import get_settings
+from app.db.database import SyncSessionLocal
+from app.models.provider import Provider
 
 def haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     """Calculate the great circle distance between two points on the earth."""
@@ -16,22 +17,61 @@ def haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
 
 def search_local_providers(service_type: str, area: str, city: str = "Karachi", limit: int = 5) -> str:
     """
-    Search our own SQLite provider database.
-    Returns top providers sorted by distance from user's area (Haversine).
-    Returns empty list JSON if no results found.
+    Search our own local provider database using SQLAlchemy (db-agnostic).
     """
     print(f"[LOCAL SEARCH] Searching for {service_type} in {area}, {city}...")
     
-    # 1. Query SQLite synchronously to avoid cross-task anyio errors
-    conn = sqlite3.connect("ustadg.db")
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT * FROM providers WHERE is_active = 1 AND service_type = ?",
-        (service_type.lower(),)
-    )
-    providers = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+    # Normalize/translate Urdu script and Roman Urdu variants to English DB keys
+    raw_service = service_type.strip().lower()
+    translation_map = {
+        # Urdu Script
+        "پلمبر": "plumber",
+        "الیکٹریشن": "electrician",
+        "بجلی والا": "electrician",
+        "الیکٹرک": "electrician",
+        "اے سی": "ac technician",
+        "اےسی": "ac technician",
+        "مکینک": "ac technician",
+        "ٹیکنیشن": "ac technician",
+        "کارپینٹر": "carpenter",
+        "بڑھئی": "carpenter",
+        "سویپر": "cleaner",
+        "صفائی والا": "cleaner",
+        
+        # Common Roman Urdu Variants
+        "palumber": "plumber",
+        "bijli": "electrician",
+        "ac mechanic": "ac technician",
+        "technician": "ac technician"
+    }
+    
+    mapped_service = translation_map.get(raw_service, raw_service)
+    print(f"[LOCAL SEARCH] Mapped service type '{raw_service}' to '{mapped_service}' for database query.")
+    
+    providers = []
+    with SyncSessionLocal() as db_session:
+        try:
+            results = db_session.query(Provider).filter_by(
+                is_active=True,
+                service_type=mapped_service
+            ).all()
+            
+            for p in results:
+                providers.append({
+                    "id": p.id,
+                    "name": p.name,
+                    "service_type": p.service_type,
+                    "area": p.area,
+                    "address": p.address,
+                    "phone": p.phone or "N/A",
+                    "email": p.email or "N/A",
+                    "lat": p.lat,
+                    "lng": p.lng,
+                    "rating": p.rating,
+                    "price": p.price
+                })
+        except Exception as e:
+            print(f"[LOCAL SEARCH] Database query failed: {e}")
 
     if not providers:
         print(f"[LOCAL SEARCH] No '{service_type}' found in database.")

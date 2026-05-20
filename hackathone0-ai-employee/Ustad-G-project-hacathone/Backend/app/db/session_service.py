@@ -1,49 +1,39 @@
 import json
-import sqlite3
 from typing import Optional, Any
 from google.adk.sessions import InMemorySessionService, Session
+from app.db.database import SyncSessionLocal
+from app.models.session import ChatSession
 
 class PersistentSessionService(InMemorySessionService):
     def save_session_sync(self, session: Session) -> None:
-        """Synchronously persist a Session to the SQLite database."""
-        conn = sqlite3.connect("ustadg.db")
-        cursor = conn.cursor()
-        try:
-            session_json = session.model_dump_json()
-            cursor.execute(
-                """
-                INSERT INTO chat_sessions (id, app_name, user_id, session_data, updated_at)
-                VALUES (?, ?, ?, ?, datetime('now'))
-                ON CONFLICT(id) DO UPDATE SET
-                    session_data=excluded.session_data,
-                    updated_at=datetime('now')
-                """,
-                (session.id, session.app_name, session.user_id, session_json)
-            )
-            conn.commit()
-            print(f"[SESSION_DB] Saved session {session.id} to SQLite DB.")
-        except Exception as e:
-            print(f"[SESSION_DB] Error saving session {session.id}: {e}")
-        finally:
-            conn.close()
+        """Synchronously persist a Session using SQLAlchemy (db-agnostic)."""
+        session_json = session.model_dump_json()
+        with SyncSessionLocal() as db_session:
+            try:
+                chat_session = ChatSession(
+                    id=session.id,
+                    app_name=session.app_name,
+                    user_id=session.user_id,
+                    session_data=session_json
+                )
+                db_session.merge(chat_session)
+                db_session.commit()
+                print(f"[SESSION_DB] Saved session {session.id} using SQLAlchemy.")
+            except Exception as e:
+                db_session.rollback()
+                print(f"[SESSION_DB] Error saving session {session.id}: {e}")
 
     def _load_session_sync(self, app_name: str, user_id: str, session_id: str) -> Optional[dict]:
-        """Synchronously load a Session state dict from SQLite."""
-        conn = sqlite3.connect("ustadg.db")
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        try:
-            cursor.execute(
-                "SELECT session_data FROM chat_sessions WHERE id = ? AND app_name = ? AND user_id = ?",
-                (session_id, app_name, user_id)
-            )
-            row = cursor.fetchone()
-            if row:
-                return json.loads(row["session_data"])
-        except Exception as e:
-            print(f"[SESSION_DB] Error loading session {session_id}: {e}")
-        finally:
-            conn.close()
+        """Synchronously load a Session state dict using SQLAlchemy."""
+        with SyncSessionLocal() as db_session:
+            try:
+                row = db_session.query(ChatSession).filter_by(
+                    id=session_id, app_name=app_name, user_id=user_id
+                ).first()
+                if row:
+                    return json.loads(row.session_data)
+            except Exception as e:
+                print(f"[SESSION_DB] Error loading session {session_id}: {e}")
         return None
 
     async def create_session(self, *, app_name: str, user_id: str, state: Optional[dict[str, Any]] = None, session_id: Optional[str] = None) -> Session:
@@ -57,13 +47,17 @@ class PersistentSessionService(InMemorySessionService):
         if session:
             return session
 
-        # Load from SQLite
+        # Load using SQLAlchemy
         session_data = self._load_session_sync(app_name, user_id, session_id)
         if session_data:
-            print(f"[SESSION_DB] Successfully restored session {session_id} from SQLite DB.")
+            print(f"[SESSION_DB] Successfully restored session {session_id} using SQLAlchemy.")
             session = Session.model_validate(session_data)
-            # Cache it back in InMemorySessionService._sessions dict
-            self._sessions[(app_name, user_id, session_id)] = session
+            # Cache it back in InMemorySessionService.sessions dict
+            if app_name not in self.sessions:
+                self.sessions[app_name] = {}
+            if user_id not in self.sessions[app_name]:
+                self.sessions[app_name][user_id] = {}
+            self.sessions[app_name][user_id][session_id] = session
             return session
 
         return None

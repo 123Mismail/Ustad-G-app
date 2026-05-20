@@ -25,6 +25,8 @@ async def list_providers(
     service_type: str | None = Query(None, description="e.g. plumber"),
     city: str | None = Query("Karachi", description="Default is Karachi"),
     area: str | None = Query(None, description="e.g. Gulshan"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
 ) -> list[Provider]:
     query = select(Provider).where(Provider.is_active == True)
@@ -36,7 +38,11 @@ async def list_providers(
     if area:
         query = query.where(Provider.area.ilike(f"%{area}%"))
         
-    result = await db.execute(query.order_by(Provider.rating.desc()))
+    result = await db.execute(
+        query.order_by(Provider.rating.desc())
+        .offset(skip)
+        .limit(limit)
+    )
     return list(result.scalars().all())
 
 

@@ -28,8 +28,30 @@ async def google_maps_search_providers(params: MapsSearchInput) -> str:
     """Find service providers near a location using Google Maps Places API."""
     settings = get_mcp_settings()
     try:
+        # Translate Urdu script and Roman Urdu variants to English for optimal Places API searching
+        raw_service = params.service.strip().lower()
+        translation_map = {
+            "پلمبر": "plumber",
+            "الیکٹریشن": "electrician",
+            "بجلی والا": "electrician",
+            "الیکٹرک": "electrician",
+            "اے سی": "ac technician",
+            "اےسی": "ac technician",
+            "مکینک": "ac technician",
+            "ٹیکنیشن": "ac technician",
+            "کارپینٹر": "carpenter",
+            "بڑھئی": "carpenter",
+            "سویپر": "cleaner",
+            "صفائی والا": "cleaner",
+            "palumber": "plumber",
+            "bijli": "electrician",
+            "ac mechanic": "ac technician",
+            "technician": "ac technician"
+        }
+        mapped_service = translation_map.get(raw_service, raw_service)
+        
         # 1. Text Search API
-        query = f"{params.service} near {params.location}"
+        query = f"{mapped_service} near {params.location}"
         search_params = {
             "query": query,
             "radius": params.radius_km * 1000,

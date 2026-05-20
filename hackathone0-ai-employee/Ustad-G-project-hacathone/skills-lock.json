@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "Mobile UX Design": {
+      "source": "phazurlabs/ux-ui-mastery",
+      "sourceType": "github",
+      "skillPath": "skills/mobile-ux-design/SKILL.md",
+      "computedHash": "dc7cd44bb1ca084a5238d6b286d5abbebab9cd20a6150e1c59c5ea25ac02193b"
+    },
     "mcp-builder": {
       "source": "anthropics/skills",
       "sourceType": "github",

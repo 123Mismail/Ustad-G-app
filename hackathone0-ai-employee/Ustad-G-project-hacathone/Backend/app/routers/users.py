@@ -3,7 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.user import UserOut, UserCreate
+from app.schemas.user import UserOut, UserCreate, UserProfileUpdate
+from app.dependencies.auth import get_current_user
+from pydantic import BaseModel
+
+class TokenUpdate(BaseModel):
+    device_token: str
 
 router = APIRouter(tags=["Users"])
 
@@ -17,17 +22,7 @@ async def register_user(
     body: UserCreate,
     db: AsyncSession = Depends(get_db)
 ) -> User:
-    # 1. Duplicate check — Phone uniqueness
-    existing_phone = await db.execute(
-        select(User).where(User.phone == body.phone)
-    )
-    if existing_phone.scalars().first():
-        raise HTTPException(
-            status_code=409,
-            detail=f"A user with phone '{body.phone}' is already registered."
-        )
-
-    # 2. Duplicate check — Email uniqueness
+    # 1. Duplicate check — Email uniqueness only
     if body.email:
         existing_email = await db.execute(
             select(User).where(User.email == body.email)
@@ -45,6 +40,58 @@ async def register_user(
     await db.commit()
     await db.refresh(user)
     return user
+
+
+
+@router.get(
+    "/users/me",
+    response_model=UserOut,
+    summary="Get current user's own profile",
+)
+async def get_my_profile(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """Returns the authenticated user's own profile."""
+    return current_user
+
+@router.patch(
+    "/users/me",
+    response_model=UserOut,
+    summary="Update current user's profile (name, email, city, area)",
+)
+async def update_my_profile(
+    body: UserProfileUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """Update name, email, city or area for the authenticated user."""
+    updates = body.model_dump(exclude_unset=True)
+
+    # Check email uniqueness if being changed
+    if "email" in updates and updates["email"] and updates["email"] != current_user.email:
+        existing = await db.execute(select(User).where(User.email == updates["email"]))
+        if existing.scalars().first():
+            raise HTTPException(status_code=409, detail="Email already in use by another account.")
+
+    for key, value in updates.items():
+        setattr(current_user, key, value)
+
+    db.add(current_user)
+    await db.commit()
+    await db.refresh(current_user)
+    return current_user
+
+@router.patch("/users/me/token", summary="Register device FCM token")
+async def register_device_token(
+    body: TokenUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Store the user's Firebase FCM device token for push notifications."""
+    current_user.device_token = body.device_token
+    db.add(current_user)
+    await db.commit()
+    return {"message": "Device token registered successfully."}
 
 @router.get(
     "/users/{user_id}",

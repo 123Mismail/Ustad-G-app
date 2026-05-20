@@ -55,7 +55,7 @@ export default function CategoryGrid({ onCategorySelect }) {
     { id: 3, name: t('cat_cleaner', language), icon: 'sun', color: '#10B981', prompt: 'I need a cleaner for my house' },
     { id: 4, name: t('cat_ac', language), icon: 'wind', color: '#EF4444', prompt: 'I need AC maintenance' },
     { id: 5, name: t('cat_painter', language), icon: 'edit-3', color: '#8B5CF6', prompt: 'I need a painter for my home' },
-    { id: 6, name: t('cat_carpenter', language), icon: 'hammer', color: '#B45309', prompt: 'I need a carpenter for furniture' },
+    { id: 6, name: t('cat_carpenter', language), icon: 'tool', color: '#B45309', prompt: 'I need a carpenter for furniture' },
     { id: 7, name: t('cat_gardener', language), icon: 'feather', color: '#059669', prompt: 'I need a gardener for my lawn' },
     { id: 8, name: t('cat_more', language), icon: 'grid', color: '#6B7280', prompt: 'Show me all services' },
   ];

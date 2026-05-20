@@ -41,6 +41,18 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000,http://localhost:19006"
     admin_key: str = "ustadg-admin-secret"  # Override in .env as ADMIN_KEY
 
+    # ── Firebase ──────────────────────────────────────────────────
+    firebase_credentials_path: str = ""
+
+    # ── JWT Auth ──────────────────────────────────────────────────
+    jwt_secret: str = "changeme-in-production"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 10080  # 7 days
+
+    # ── Database URL ──────────────────────────────────────────────
+    database_url: str = "sqlite+aiosqlite:///./ustadg.db"
+
+
     @property
     def cors_origins_list(self) -> list[str]:
         """Parse comma-separated CORS origins into a list."""

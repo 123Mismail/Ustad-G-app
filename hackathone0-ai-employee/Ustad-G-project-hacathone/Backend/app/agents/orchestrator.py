@@ -38,32 +38,44 @@ os.environ["GEMINI_API_KEY"] = settings.gemini_api_key.strip()
 MODEL = settings.fast_model  # "gemini-2.5-flash" from .env
 MCP_SSE_URL = f"{settings.mcp_server_url.rstrip('/')}/sse"
 
+# ── Safe Print for Emoji/Unicode support on Windows terminals ──────────────────
+def print(*args, **kwargs):
+    import sys
+    try:
+        msg = " ".join(str(arg) for arg in args)
+        enc = sys.stdout.encoding or 'utf-8'
+        sys.stdout.write(msg.encode(enc, errors='replace').decode(enc) + kwargs.get('end', '\n'))
+        sys.stdout.flush()
+    except Exception:
+        import builtins
+        builtins.print(*args, **kwargs)
+
 # ── Global state ───────────────────────────────────────────────────────────────
 _runner: Runner | None = None
 _session_service: PersistentSessionService | None = None
+_maps_toolset: MCPToolset | None = None
+_booking_toolset: MCPToolset | None = None
 APP_NAME = "ustadg"
 
 
-async def _init_runner() -> Runner:
+async def _init_runner() -> tuple:
     """
     Initialize MCP connection and ADK Runner once at startup.
     """
-    global _runner, _session_service
+    global _runner, _session_service, _maps_toolset, _booking_toolset
 
     if _runner is not None:
-        return _runner
+        return _runner, _maps_toolset, _booking_toolset
 
     print(f"[ORCHESTRATOR] Initializing MCPToolset for {MCP_SSE_URL} ...")
 
     # ── Define Toolsets ───────────────────────────────────────────────────────
-    # We create toolsets with filters so each agent only sees its relevant tools.
-    
-    maps_toolset = MCPToolset(
+    _maps_toolset = MCPToolset(
         connection_params=SseConnectionParams(url=MCP_SSE_URL, timeout=30.0),
         tool_filter=["google_maps_search_providers"]
     )
 
-    booking_toolset = MCPToolset(
+    _booking_toolset = MCPToolset(
         connection_params=SseConnectionParams(url=MCP_SSE_URL, timeout=30.0),
         tool_filter=["google_sheets_record_booking", "google_calendar_create_appointment"]
     )
@@ -78,7 +90,7 @@ async def _init_runner() -> Runner:
             "and returns a UGK-YYYY-XXXX confirmation ID."
         ),
         instruction=booking_instructions,
-        tools=[booking_toolset],
+        tools=[_booking_toolset],
     )
 
     negotiation_agent = LlmAgent(
@@ -103,7 +115,7 @@ async def _init_runner() -> Runner:
             "Use this agent when the user needs to find a service provider."
         ),
         instruction=discovery_instructions,
-        tools=[local_search_tool, maps_toolset],
+        tools=[local_search_tool, _maps_toolset],
         sub_agents=[negotiation_agent],
     )
 
@@ -127,105 +139,151 @@ async def _init_runner() -> Runner:
     )
 
     print("[ORCHESTRATOR] Pristine ADK Runner ready with fresh MCP Toolsets.")
-    return runner, maps_toolset, booking_toolset
+    return _runner, _maps_toolset, _booking_toolset
+
+
+async def close_ustadg_swarm():
+    """
+    Cleanly release SSE toolset connection resources.
+    Call this during application shutdown.
+    """
+    global _maps_toolset, _booking_toolset
+    try:
+        if _maps_toolset:
+            await _maps_toolset.close()
+            _maps_toolset = None
+        if _booking_toolset:
+            await _booking_toolset.close()
+            _booking_toolset = None
+        print("[ORCHESTRATOR] Cleanly closed MCP toolsets and SSE connections.")
+    except Exception as e:
+        print(f"[ORCHESTRATOR] Error closing toolsets: {e}")
 
 
 async def run_ustadg_swarm(session_id: str, message: str, user_phone: str | None = None) -> dict:
     """
     Run the UstadG agent pipeline for a given session and user message.
     """
-    maps_toolset = None
-    booking_toolset = None
     try:
         runner, maps_toolset, booking_toolset = await _init_runner()
         user_id = user_phone if user_phone else "mock_user"
 
-        # Ensure session exists
+        # Ensure session exists (only create if it doesn't already exist)
         try:
-            await _session_service.create_session(
+            existing = await _session_service.get_session(
                 app_name=APP_NAME,
-                session_id=session_id,
                 user_id=user_id,
+                session_id=session_id,
             )
-        except Exception:
-            pass 
+            if not existing:
+                await _session_service.create_session(
+                    app_name=APP_NAME,
+                    session_id=session_id,
+                    user_id=user_id,
+                )
+                print(f"[ORCHESTRATOR] Created fresh persistent session {session_id}")
+            else:
+                print(f"[ORCHESTRATOR] Loaded existing persistent session {session_id}")
+        except Exception as e:
+            print(f"[ORCHESTRATOR] Session check/create error: {e}")
 
         # ── User Recognition & Minimal System Context Injection ────────────────
         user_context = ""
         if user_phone:
-            import sqlite3
-            conn = sqlite3.connect("ustadg.db")
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            try:
-                cursor.execute("SELECT name, area, city FROM users WHERE phone = ?", (user_phone,))
-                user_row = cursor.fetchone()
-                if user_row:
-                    # Get the session to inspect event history
-                    session = await _session_service.get_session(
-                        app_name=APP_NAME,
-                        user_id=user_id,
-                        session_id=session_id
-                    )
-                    # Only inject on the very first message to prevent token bloat
-                    if session and len(session.events) == 0:
-                        user_context = f"[Saved Location: {user_row['area']}, {user_row['city']} | User Name: {user_row['name']}]\n"
+            from app.db.database import SyncSessionLocal
+            from app.models.user import User
+            
+            with SyncSessionLocal() as db_session:
+                try:
+                    user_row = db_session.query(User).filter_by(phone=user_phone).first()
+                    if user_row:
+                        user_context = f"[User Profile — Name: {user_row.name}, Saved Location: {user_row.area}, {user_row.city}]\n"
                         print(f"[ORCHESTRATOR] Injected system context: {user_context.strip()}")
-            except Exception as e:
-                print(f"[ORCHESTRATOR] Personalization error: {e}")
-            finally:
-                conn.close()
+                except Exception as e:
+                    print(f"[ORCHESTRATOR] Personalization error: {e}")
 
         content = Content(parts=[Part(text=user_context + message)], role="user")
         final_reply = ""
         active_agent = "TriageAgent"
         providers = []
+        trace_steps = []
 
         from contextlib import aclosing
+        from datetime import datetime
 
-        async with aclosing(runner.run_async(
-            session_id=session_id,
-            user_id=user_id,
-            new_message=content,
-        )) as agen:
-            async for event in agen:
-                # ADK Event Logging
-                author = getattr(event, 'author', 'System')
-                event_type = event.__class__.__name__
-                print(f"[ADK EVENT] {author}: {event_type}")
+        try:
+            async with aclosing(runner.run_async(
+                session_id=session_id,
+                user_id=user_id,
+                new_message=content,
+            )) as agen:
+                async for event in agen:
+                    # ADK Event Logging
+                    author = getattr(event, 'author', 'System')
+                    event_type = event.__class__.__name__
+                    print(f"[ADK EVENT] {author}: {event_type}")
 
-                # Print content if available
-                if hasattr(event, 'content') and event.content and event.content.parts:
-                    text = event.content.parts[0].text
-                    if text:
-                        print(f"    Text: {text[:200]}...")
+                    step_data = {
+                        "name": author,
+                        "status": "done",
+                        "timestamp": datetime.now().strftime("%I:%M:%S %p"),
+                        "input": "",
+                        "thinking": "",
+                        "output": ""
+                    }
+                    has_useful_data = False
 
-                # Print function calls
-                if hasattr(event, 'get_function_calls'):
-                    for call in event.get_function_calls():
-                        print(f"    CALL: {call.name}({call.args})")
+                    # Print content if available
+                    if hasattr(event, 'content') and event.content and event.content.parts:
+                        text = event.content.parts[0].text
+                        if text:
+                            print(f"    Text: {text[:200]}...")
+                            step_data["thinking"] = text.strip()
+                            has_useful_data = True
 
-                # Capture tool results
-                if hasattr(event, 'get_function_responses'):
-                    for resp in event.get_function_responses():
-                        print(f"    RESPONSE: {resp.name} -> {str(resp.response)[:100]}...")
-                        if resp.name in ("google_maps_search_providers", "search_local_providers"):
-                            try:
-                                # In ADK/GenAI, resp.response contains the tool output
-                                output_data = resp.response
-                                if isinstance(output_data, dict) and "providers" in output_data:
-                                    providers = output_data["providers"]
-                                elif isinstance(output_data, str):
-                                    data = json.loads(output_data)
-                                    if "providers" in data:
-                                        providers = data["providers"]
-                            except Exception:
-                                pass
+                    # Print function calls
+                    if hasattr(event, 'get_function_calls'):
+                        calls = list(event.get_function_calls())
+                        if calls:
+                            for call in calls:
+                                print(f"    CALL: {call.name}({call.args})")
+                            call_strs = [f"{c.name}({c.args})" for c in calls]
+                            step_data["thinking"] += f"\nCalling Tools: {', '.join(call_strs)}"
+                            has_useful_data = True
 
-                if hasattr(event, 'is_final_response') and event.is_final_response():
-                    if getattr(event, 'content', None) and getattr(event.content, 'parts', None):
-                        final_reply = event.content.parts[0].text
-                    active_agent = author or active_agent
+                    # Capture tool results
+                    if hasattr(event, 'get_function_responses'):
+                        resps = list(event.get_function_responses())
+                        if resps:
+                            for resp in resps:
+                                print(f"    RESPONSE: {resp.name} -> {str(resp.response)[:100]}...")
+                                if resp.name in ("google_maps_search_providers", "search_local_providers"):
+                                    try:
+                                        # In ADK/GenAI, resp.response contains the tool output
+                                        output_data = resp.response
+                                        if isinstance(output_data, dict) and "providers" in output_data:
+                                            providers = output_data["providers"]
+                                        elif isinstance(output_data, str):
+                                            data = json.loads(output_data)
+                                            if "providers" in data:
+                                                providers = data["providers"]
+                                    except Exception:
+                                        pass
+                            
+                            resp_strs = [f"{r.name} result captured." for r in resps]
+                            step_data["output"] = "\n".join(resp_strs)
+                            has_useful_data = True
+
+                    if hasattr(event, 'is_final_response') and event.is_final_response():
+                        if getattr(event, 'content', None) and getattr(event.content, 'parts', None):
+                            final_reply = event.content.parts[0].text
+                        active_agent = author or active_agent
+                        
+                    if has_useful_data and author != 'System':
+                        trace_steps.append(step_data)
+
+        except Exception as run_err:
+            print(f"[ORCHESTRATOR] Runner execution exception: {run_err}")
 
         # ── Database Session Persistence ───────────────────────────────────────
         try:
@@ -242,7 +300,8 @@ async def run_ustadg_swarm(session_id: str, message: str, user_phone: str | None
         return {
             "reply": final_reply or "No response generated.",
             "agent": active_agent,
-            "providers": providers
+            "providers": providers,
+            "trace_steps": trace_steps
         }
 
     except Exception as e:
@@ -251,15 +310,6 @@ async def run_ustadg_swarm(session_id: str, message: str, user_phone: str | None
         return {
             "reply": f"An error occurred: {str(e)}",
             "agent": "TriageAgent",
-            "providers": []
+            "providers": [],
+            "trace_steps": []
         }
-    finally:
-        # Cleanly release SSE toolset connection resources
-        try:
-            if maps_toolset:
-                await maps_toolset.close()
-            if booking_toolset:
-                await booking_toolset.close()
-            print("[ORCHESTRATOR] Cleanly closed MCP toolsets and SSE connections.")
-        except Exception as e:
-            print(f"[ORCHESTRATOR] Error closing toolsets: {e}")

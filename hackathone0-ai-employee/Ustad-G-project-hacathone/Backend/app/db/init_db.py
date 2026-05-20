@@ -2,6 +2,8 @@ import asyncio
 from app.db.database import engine, Base, AsyncSessionLocal
 from app.models.provider import Provider
 from app.models.user import User
+from app.models.booking import Booking  # noqa: F401 — ensures table is created
+from app.models.session import ChatSession  # noqa: F401 — ensures table is created
 
 # 10 mock providers across Karachi services & areas
 MOCK_PROVIDERS = [

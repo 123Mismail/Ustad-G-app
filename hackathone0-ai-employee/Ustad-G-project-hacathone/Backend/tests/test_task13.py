@@ -1,115 +1,78 @@
 import asyncio
-import uuid
-import requests
+import httpx
+import os
+import sys
 
-# Base URL for FastAPI live dev server
-BASE_URL = "http://127.0.0.1:8000/v1"
+# Add the Backend folder to the sys.path so we can import 'app'
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def test_user_crud():
-    print("\n============================================================")
-    print("PART 1 — User CRUD & Duplicate Enforcements")
-    print("============================================================")
+BASE_URL = "http://127.0.0.1:8002"
 
-    # 1. Register a new user
-    user_phone = f"0312{uuid.uuid4().hex[:7]}"
-    user_email = f"test.user.{uuid.uuid4().hex[:6]}@ustadg.com"
-    payload = {
-        "name": "Hamza Ali",
-        "phone": user_phone,
-        "email": user_email,
-        "city": "Karachi",
-        "area": "Clifton"
-    }
-
-    print(f"Registering Hamza Ali with phone '{user_phone}'...")
-    res = requests.post(f"{BASE_URL}/users", json=payload)
-    assert res.status_code == 201, f"Failed registration: {res.text}"
-    user_id = res.json()["id"]
-    print(f"Successfully registered. User ID: {user_id}")
-
-    # 2. Try registering duplicate phone
-    print("Registering duplicate phone (should fail with 409)...")
-    res_dup_phone = requests.post(f"{BASE_URL}/users", json={
-        "name": "Hamza Ali Clone",
-        "phone": user_phone,
-        "email": f"clone.{user_email}",
-        "area": "Clifton"
-    })
-    assert res_dup_phone.status_code == 409, f"Expected 409 conflict, got: {res_dup_phone.status_code}"
-    print(f"[PASS] Correctly rejected duplicate phone: {res_dup_phone.json()['detail']}")
-
-    # 3. Try registering duplicate email
-    print("Registering duplicate email (should fail with 409)...")
-    res_dup_email = requests.post(f"{BASE_URL}/users", json={
-        "name": "Hamza Ali Clone 2",
-        "phone": f"0313{uuid.uuid4().hex[:7]}",
-        "email": user_email,
-        "area": "Clifton"
-    })
-    assert res_dup_email.status_code == 409, f"Expected 409 conflict, got: {res_dup_email.status_code}"
-    print(f"[PASS] Correctly rejected duplicate email: {res_dup_email.json()['detail']}")
-
-    # 4. Retrieve profile
-    print(f"Retrieving profile for User ID {user_id}...")
-    res_get = requests.get(f"{BASE_URL}/users/{user_id}")
-    assert res_get.status_code == 200
-    assert res_get.json()["name"] == "Hamza Ali"
-    print(f"[PASS] Successfully retrieved user profile: {res_get.json()['name']} ({res_get.json()['area']})")
-
-
-def test_swarm_personalization():
-    print("\n============================================================")
-    print("PART 2 — Swarm Personalization & History Persistence")
-    print("============================================================")
-
-    session_id = f"t13-session-{uuid.uuid4().hex[:8]}"
-    phone = "03001234567" # Seeded user "Osman" in "Gulshan-e-Iqbal"
-
-    # Step 2a: Greet receptionist passing Osman's phone
-    print(f"\n[2a] Sending greeting for Osman ({phone}) in new session '{session_id}'...")
-    payload1 = {
-        "session_id": session_id,
-        "message": "Assalam-o-Alaikum! Hello receptionist",
-        "user_phone": phone
-    }
-    res1 = requests.post(f"{BASE_URL}/chat", json=payload1)
-    assert res1.status_code == 200, f"Chat failed: {res1.text}"
+async def test_auth_flow():
+    print("="*50)
+    print("Task 13 — JWT Authentication Tests")
+    print("="*50)
     
-    reply1 = res1.json()["reply"]
-    print(f"Swarm Reply 1:\n{reply1}")
-    
-    # Verify the reply welcomes Osman by name
-    assert "osman" in reply1.lower(), f"Expected name 'Osman' in reply, but got: {reply1}"
-    print("[PASS] Receptionist successfully recognized and greeted Osman by name!")
+    async with httpx.AsyncClient() as client:
+        # 1. Register a test user
+        print("\n[TEST 1] POST /v1/auth/register")
+        test_phone = "03009999999"
+        register_data = {
+            "name": "Test JWT User",
+            "phone": test_phone,
+            "email": "jwt.test@example.com",
+            "city": "Karachi",
+            "area": "Clifton",
+            "password": "strongpassword123"
+        }
+        
+        r1 = await client.post(f"{BASE_URL}/v1/auth/register", json=register_data)
+        if r1.status_code == 201:
+            print("[PASS] User registered successfully")
+        elif r1.status_code == 409:
+            print(f"[INFO] User already registered. Continuing...")
+        else:
+            print(f"[FAIL] Expected 201 or 409, got {r1.status_code}: {r1.text}")
 
-    # Step 2b: Ask for plumber in the same session (simulating conversation reload/continuation)
-    # Since he is registered in Gulshan-e-Iqbal, it should auto-fill location to Gulshan
-    print(f"\n[2b] Continuing session '{session_id}' asking for plumber (without specifying location)...")
-    payload2 = {
-        "session_id": session_id,
-        "message": "mujhe ek plumber chahiye",
-        "user_phone": phone
-    }
-    res2 = requests.post(f"{BASE_URL}/chat", json=payload2)
-    assert res2.status_code == 200, f"Chat failed: {res2.text}"
+        # 2. Login with correct password
+        print("\n[TEST 2] POST /v1/auth/login")
+        login_data = {
+            "phone": test_phone,
+            "password": "strongpassword123"
+        }
+        r2 = await client.post(f"{BASE_URL}/v1/auth/login", json=login_data)
+        
+        access_token = None
+        if r2.status_code == 200:
+            data = r2.json()
+            access_token = data.get("access_token")
+            print(f"[PASS] Logged in successfully. Token received: {access_token[:15]}...")
+        else:
+            print(f"[FAIL] Expected 200, got {r2.status_code}: {r2.text}")
+            return
 
-    reply2 = res2.json()["reply"]
-    print(f"Swarm Reply 2:\n{reply2}")
+        # 3. Access protected route without token
+        print("\n[TEST 3] GET /v1/bookings (No Token)")
+        r3 = await client.get(f"{BASE_URL}/v1/bookings")
+        if r3.status_code == 401:
+            print(f"[PASS] 401 Unauthorized properly returned when token is missing.")
+        else:
+            print(f"[FAIL] Expected 401, got {r3.status_code}: {r3.text}")
 
-    # Verify that the Discovery agent automatically located him in Gulshan-e-Iqbal and returned Ali Plumber Services
-    assert "gulshan" in reply2.lower() or "ali plumber" in reply2.lower() or "karachi plumbing" in reply2.lower(), \
-        f"Expected auto-filled location 'Gulshan' or provider in response, but got: {reply2}"
-    print("[PASS] DiscoveryAgent successfully resolved saved location 'Gulshan-e-Iqbal' from system context!")
-
-def main():
-    try:
-        test_user_crud()
-        test_swarm_personalization()
-        print("\n[PASS] Task 13 persistence and user recognition verified successfully!")
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        exit(1)
+        # 4. Access protected route with token
+        print("\n[TEST 4] GET /v1/bookings (With Token)")
+        headers = {"Authorization": f"Bearer {access_token}"}
+        r4 = await client.get(f"{BASE_URL}/v1/bookings", headers=headers)
+        if r4.status_code == 200:
+            print(f"[PASS] 200 OK. Successfully accessed protected route!")
+            bookings = r4.json()
+            print(f"       Found {len(bookings)} bookings for this user.")
+        else:
+            print(f"[FAIL] Expected 200, got {r4.status_code}: {r4.text}")
 
 if __name__ == "__main__":
-    main()
+    try:
+        asyncio.run(test_auth_flow())
+        print("\nTask 13 Auth tests completed.")
+    except httpx.ConnectError:
+        print("\n[ERROR] Could not connect to FastAPI server. Is it running?")

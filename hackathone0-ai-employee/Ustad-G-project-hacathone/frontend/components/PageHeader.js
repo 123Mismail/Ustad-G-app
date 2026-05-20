@@ -5,14 +5,16 @@ import { Feather } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { Typography, BorderRadius, getStyle } from '../theme/typography';
 import { useNavigation } from '@react-navigation/native';
-import { useLanguage } from '../App';
+import { useLanguage } from '../context/LanguageContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function PageHeader({ title, rightElement, showBack = false }) {
   const navigation = useNavigation();
   const { language } = useLanguage();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.outerWrapper}>
+    <View style={[styles.outerWrapper, { marginTop: Math.max(insets.top, 8) }]}>
       <LinearGradient
         colors={['#1A1A1A', '#2A2A2A']}
         start={{ x: 0, y: 0 }}
@@ -30,7 +32,20 @@ export default function PageHeader({ title, rightElement, showBack = false }) {
                 <Feather name="arrow-left" size={24} color={Colors.accent} />
               </TouchableOpacity>
             )}
-            <Text style={[styles.title, getStyle('header', language)]} numberOfLines={1}>{title}</Text>
+            <Text 
+              style={[
+                styles.title, 
+                getStyle('header', language),
+                { fontSize: language === 'ur' ? 18 : 20, lineHeight: language === 'ur' ? 26 : 24 },
+                language === 'ur' && { paddingBottom: 2 }
+              ]} 
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.8}
+            >
+              {title}
+            </Text>
           </View>
 
           {rightElement && (
@@ -47,13 +62,12 @@ export default function PageHeader({ title, rightElement, showBack = false }) {
 const styles = StyleSheet.create({
   outerWrapper: {
     marginHorizontal: 20,
-    marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 4,
     borderRadius: BorderRadius.card,
     borderWidth: 1,
     borderColor: '#C1FF7220',
     backgroundColor: '#1A1A1A',
-    overflow: 'hidden', // Ensures gradient respects border radius
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -74,21 +88,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 14,
-    minHeight: 64,
+    paddingVertical: 10,
+    minHeight: 48,
   },
   leftGroup: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    marginRight: 8, // Gap before right element
   },
   backBtn: {
-    marginRight: 16,
+    marginRight: 12,
   },
   title: {
     color: '#FFFFFF',
+    flex: 1, // Allow text to take remaining space and then truncate
   },
   rightGroup: {
-    marginLeft: 12,
+    flexShrink: 0, // Don't let the right element shrink
   }
 });
+

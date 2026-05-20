@@ -42,7 +42,7 @@ export const POPULAR_SERVICES = [
   { 
     id: '6', 
     titleKey: 'cat_carpenter', 
-    icon: 'hammer', 
+    icon: 'tool', 
     price: '800', 
     prompt: 'I need a carpenter for furniture repair',
     color: '#DEB887' 
