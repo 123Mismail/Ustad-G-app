@@ -1,1 +1,0 @@
-i want to make the digital fte fully autonomus here .
